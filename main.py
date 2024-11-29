@@ -2,9 +2,10 @@ import pygame as pg
 import time
 import threading
 import random
-# import tkinter   end screen, asks if you want to play again.
+
 All_Bullets = []
 All_asteroids = []
+health = 100
 class Asteriod:
     def __init__(self,x,y):
         self.asteroid=pg.image.load(r"C:\Users\ldogb\Desktop\spaceship_game\photos\asteroid.png")
@@ -60,21 +61,23 @@ width, height = 1400, 900
 
 pg.init()
 
-background = pg.image.load(r"C:\Users\ldogb\Desktop\spaceship_game\photos\background.png")
-background = pg.transform.scale(background,(1400,900))
+# background = pg.image.load(r"C:\Users\ldogb\Desktop\spaceship_game\photos\background.png")
+# background = pg.transform.scale(background,(1400,900))
 display = pg.display.set_mode((width, height))
 pg.display.set_caption('game game')
 
 
 plane = pg.image.load(r'C:\Users\ldogb\Desktop\spaceship_game\photos\plane.png')
 
-
+plane=pg.transform.scale(plane,(80,80))
 plane_Start_x, plane_Start_y = round(width // 3) + 150, round(height // 1.25)-5
+
 plane_rect = plane.get_rect(topleft=(plane_Start_x, plane_Start_y))
 
 #have an asteroid always there going upwards so the bullets always render GENIUS//
 clock = pg.time.Clock()
 running = True
+
 
 # def backgrounds(): #not sure of the issue for the background 
 #     global background,display
@@ -82,33 +85,39 @@ running = True
 #     pg.display.update()
 # t2=threading.Thread(target=backgrounds)
 # t2.start()
+# display.blit(background,(0,0)) 
 
 while running:
-    
     display.fill('purple')
+    score_score = pg.font.Font(None, 50).render(f"Score: {score}", True, (255, 255, 255))
+    display.blit(score_score,(10,10))
+
+    health_health = pg.font.Font(None, 50).render(f"Health: {health}", True, (255, 20, 20))
+    display.blit(health_health,(1400-200,10))
+
     # print(len(All_asteroids))
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False        
         if event.type == pg.MOUSEBUTTONDOWN:
-            print('click')
+            # print('click')
             All_Bullets.append(Bullet(plane_rect.centerx,plane_rect.top))
 
     keys_pressed = pg.key.get_pressed()
     if keys_pressed[pg.K_w]:#up
         if plane_rect.y >0:
-            plane_rect.y -= 9
+            plane_rect.y -= 5
     if keys_pressed[pg.K_s]:#down
-        if plane_rect.top !=710-4:
-            plane_rect.y += 9
+        if plane_rect.bottom !=900:
+            plane_rect.y += 5
     if keys_pressed[pg.K_a]:#left
         if plane_rect.x >0:
-            plane_rect.x -= 9
+            plane_rect.x -= 5
     if keys_pressed[pg.K_d]:#right
-        if plane_rect.x != 1405-(900-710)+4:
-            plane_rect.x += 9
+        if plane_rect.right < 1400:
+            plane_rect.x += 5
 
-    # display.blit(background,(0,0)) THIS MAKES THE GAME TOO LAGGY COZ IT HAS TO CHANGE HUGE PNG 60 TIMES A SECOND ;-; BACKGROUND WILL BE PURPLE FROM NOW ON
+    # display.blit(background,(0,0)) 
 
     for k in All_asteroids[:]:
         if plane_rect.colliderect(k.asteriod_rect):
@@ -121,6 +130,9 @@ while running:
 
             if k.asteriod_rect.top >900:
                 All_asteroids.remove(k)
+                health -= 5
+                if health <=0:
+                    running = False
             else:
                 k.show(display)
 # 2 speed down
