@@ -96,23 +96,28 @@ while running:
             plane_rect.x += 9
     display.fill('purple')
 
-    for i in All_Bullets[:]:#to create a list aswell so it auto updates and i do not modify something where there is nothing which would cause an index error. probs would cause problems otherwise
-        
-        i.move(5)
-        if i.bullet_rect.bottom < 0:
-            All_Bullets.remove(i)
-        else:
-            i.display(display)
 
-        for k in All_asteroids[:]:
+
+    for k in All_asteroids[:]:
+        try:
             k.move()
             if k.asteriod_rect.top >900:
                 All_asteroids.remove(k)
             else:
                 k.show(display)
-            if k.asteriod_rect.colliderect(i.bullet_rect):
-                All_asteroids.remove(k)
-                All_Bullets.remove(i)
+
+            for i in All_Bullets[:]:#to create a list aswell so it auto updates and i do not modify something where there is nothing which would cause an index error. probs would cause problems otherwise
+                if k.asteriod_rect.colliderect(i.bullet_rect):
+                    All_asteroids.remove(k)
+                    All_Bullets.remove(i)
+                i.move(1)
+                if i.bullet_rect.bottom < 0:
+                    All_Bullets.remove(i)
+                else:
+                    i.display(display)
+        except ValueError:
+            print('val error')
+
 
     display.blit(plane, plane_rect)
     
