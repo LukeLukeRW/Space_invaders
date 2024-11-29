@@ -72,7 +72,7 @@ plane_rect = plane.get_rect(topleft=(plane_Start_x, plane_Start_y))
 clock = pg.time.Clock()
 running = True
 while running:
-    
+
     print(len(All_asteroids))
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -97,20 +97,22 @@ while running:
     display.fill('purple')
 
     for i in All_Bullets[:]:#to create a list aswell so it auto updates and i do not modify something where there is nothing which would cause an index error. probs would cause problems otherwise
+        
         i.move(5)
         if i.bullet_rect.bottom < 0:
             All_Bullets.remove(i)
         else:
             i.display(display)
 
-    for k in All_asteroids[:]:
-        k.move()
-        if k.asteriod_rect.top >900:
-            All_asteroids.remove(k)
-        else:
-            k.show(display)
-
-    
+        for k in All_asteroids[:]:
+            k.move()
+            if k.asteriod_rect.top >900:
+                All_asteroids.remove(k)
+            else:
+                k.show(display)
+            if k.asteriod_rect.colliderect(i.bullet_rect):
+                All_asteroids.remove(k)
+                All_Bullets.remove(i)
 
     display.blit(plane, plane_rect)
     
