@@ -15,8 +15,8 @@ class Asteriod:
         self.asteriod_rect.y=y
 
 
-    def move(self):
-        self.asteriod_rect.y += 2
+    def move(self,speed):
+        self.asteriod_rect.y += speed
         ran_num = random.randrange(1,3)
         if ran_num ==1:
             self.asteriod_rect.x += int(random.randrange(1,3))
@@ -26,6 +26,7 @@ class Asteriod:
     def show(self,j):
         j.blit(self.asteroid,self.asteriod_rect)
 
+All_asteroids.append(Asteriod(-80,-80))
 
 class Bullet:
     def __init__(self,x,y):
@@ -57,7 +58,8 @@ width, height = 1400, 900
 
 pg.init()
 
-
+background = pg.image.load(r"C:\Users\ldogb\Desktop\spaceship_game\photos\background.png")
+background = pg.transform.scale(background,(1400,900))
 display = pg.display.set_mode((width, height))
 pg.display.set_caption('game game')
 
@@ -68,12 +70,14 @@ plane = pg.image.load(r'C:\Users\ldogb\Desktop\spaceship_game\photos\plane.png')
 plane_Start_x, plane_Start_y = round(width // 3) + 150, round(height // 1.25)-5
 plane_rect = plane.get_rect(topleft=(plane_Start_x, plane_Start_y))
 
-
+#have an asteroid always there going upwards so the bullets always render GENIUS//
 clock = pg.time.Clock()
 running = True
-while running:
 
-    print(len(All_asteroids))
+while running:
+    
+    display.fill('purple')
+    # print(len(All_asteroids))
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False        
@@ -94,23 +98,28 @@ while running:
     if keys_pressed[pg.K_d]:#right
         if plane_rect.x != 1405-(900-710)+4:
             plane_rect.x += 9
-    display.fill('purple')
 
-
+    display.blit(background,(0,0))
 
     for k in All_asteroids[:]:
         try:
-            k.move()
+            if k == All_asteroids[0]:
+                k.move(-2)
+            else:
+                k.move(2)
+
             if k.asteriod_rect.top >900:
                 All_asteroids.remove(k)
             else:
                 k.show(display)
-
+# 2 speed down
             for i in All_Bullets[:]:#to create a list aswell so it auto updates and i do not modify something where there is nothing which would cause an index error. probs would cause problems otherwise
+                
                 if k.asteriod_rect.colliderect(i.bullet_rect):
                     All_asteroids.remove(k)
                     All_Bullets.remove(i)
-                i.move(1)
+                if k == All_asteroids[0]:
+                    i.move(5)
                 if i.bullet_rect.bottom < 0:
                     All_Bullets.remove(i)
                 else:
