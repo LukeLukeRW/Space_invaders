@@ -54,6 +54,7 @@ t = threading.Thread(target=asteroids)
 t.start()
 
 
+score = 0
 
 width, height = 1400, 900
 
@@ -110,6 +111,8 @@ while running:
     # display.blit(background,(0,0)) THIS MAKES THE GAME TOO LAGGY COZ IT HAS TO CHANGE HUGE PNG 60 TIMES A SECOND ;-; BACKGROUND WILL BE PURPLE FROM NOW ON
 
     for k in All_asteroids[:]:
+        if plane_rect.colliderect(k.asteriod_rect):
+            running = False
         try:
             if k == All_asteroids[0]:
                 k.move(-2)
@@ -123,6 +126,7 @@ while running:
 # 2 speed down
             for i in All_Bullets[:]:#to create a list aswell so it auto updates and i do not modify something where there is nothing which would cause an index error. probs would cause problems otherwise
                 if k.asteriod_rect.colliderect(i.bullet_rect):
+                    score += 1
                     All_asteroids.remove(k)
                     All_Bullets.remove(i)
                 if k == All_asteroids[0]:
@@ -139,6 +143,7 @@ while running:
     
     pg.display.update()
 
-    clock.tick(30)  
+    clock.tick(60)  
 
 pg.quit()
+quit()
