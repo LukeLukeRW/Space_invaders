@@ -54,6 +54,7 @@ t = threading.Thread(target=asteroids)
 t.start()
 
 
+
 width, height = 1400, 900
 
 pg.init()
@@ -73,6 +74,13 @@ plane_rect = plane.get_rect(topleft=(plane_Start_x, plane_Start_y))
 #have an asteroid always there going upwards so the bullets always render GENIUS//
 clock = pg.time.Clock()
 running = True
+
+# def backgrounds(): #not sure of the issue for the background 
+#     global background,display
+#     display.blit(background,(0,0))
+#     pg.display.update()
+# t2=threading.Thread(target=backgrounds)
+# t2.start()
 
 while running:
     
@@ -99,7 +107,7 @@ while running:
         if plane_rect.x != 1405-(900-710)+4:
             plane_rect.x += 9
 
-    display.blit(background,(0,0))
+    # display.blit(background,(0,0)) THIS MAKES THE GAME TOO LAGGY COZ IT HAS TO CHANGE HUGE PNG 60 TIMES A SECOND ;-; BACKGROUND WILL BE PURPLE FROM NOW ON
 
     for k in All_asteroids[:]:
         try:
@@ -114,7 +122,6 @@ while running:
                 k.show(display)
 # 2 speed down
             for i in All_Bullets[:]:#to create a list aswell so it auto updates and i do not modify something where there is nothing which would cause an index error. probs would cause problems otherwise
-                
                 if k.asteriod_rect.colliderect(i.bullet_rect):
                     All_asteroids.remove(k)
                     All_Bullets.remove(i)
@@ -132,6 +139,6 @@ while running:
     
     pg.display.update()
 
-    clock.tick(60)  
+    clock.tick(30)  
 
 pg.quit()
